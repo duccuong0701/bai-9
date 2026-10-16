@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bài 9 – Thiết bị bắn tốc độ | Thầy Nguyễn Đức Cường</title>
+<style>
+:root{--bg:#081727;--panel:#102b43;--panel2:#153851;--line:#356078;--ink:#f1fbff;--muted:#b3d0dc;--cyan:#5ed8ff;--gold:#ffe28b;--red:#ff766a;--blue:#62a7ff;--green:#57e0ac}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#164266,#071525 70%);color:var(--ink);font:15px Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:13px 20px;background:linear-gradient(100deg,#08345b,#115c85 55%,#08345b);border-bottom:2px solid #4bbddd;flex-wrap:wrap}
+.brand{font-weight:800;color:var(--gold);font-size:17px}.brand small{display:block;color:white;font-size:12px;margin-top:5px}
+h1{font-size:clamp(21px,2.3vw,31px);margin:0;text-align:center}h1 small{display:block;font-size:13px;letter-spacing:2px;color:#d1ecff;margin-top:5px}
+.topbtn{background:#0b2947;color:white;border:1px solid #5c91b6;padding:10px 13px;border-radius:10px}
+main{max-width:1800px;margin:auto;padding:12px;display:grid;grid-template-columns:minmax(260px,320px) minmax(400px,1fr) minmax(280px,345px);gap:12px}
+.panel{background:linear-gradient(150deg,#14364e,#0c253b);border:1px solid #36617c;border-radius:15px;overflow:hidden;box-shadow:0 10px 25px #0004}
+.panel h2{background:linear-gradient(90deg,#086c89,#127c95);font-size:15px;margin:0;padding:12px 14px;letter-spacing:.3px}.pad{padding:14px}
+label{display:block;font-weight:700;margin:13px 0 7px}input[type=range]{width:100%;accent-color:#3ac8ff}select,input[type=number]{width:100%;background:#082339;border:1px solid #537d98;border-radius:9px;color:white;padding:10px}
+.value{color:var(--gold);float:right}.muted{color:var(--muted);font-size:12px;line-height:1.5}
+.row{display:flex;gap:7px;flex-wrap:wrap}.chip{background:#173d56;color:white;border:1px solid #52728a;border-radius:10px;padding:9px 10px;flex:1}.chip.active{background:#096d98;border-color:#70e4ff}
+.stage{position:relative;min-height:480px;background:#9ad6ec}#scene{position:absolute;inset:0}#scene canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:12px;top:12px;background:#092338dd;border:1px solid #82d9f4;border-radius:12px;padding:11px;max-width:250px;font-size:13px;pointer-events:none}
+.hud strong{color:#a7ffde}.radar{position:absolute;right:12px;top:12px;background:#0a1d2af2;border:3px solid #718d9c;border-radius:14px;padding:11px;text-align:center;min-width:132px;box-shadow:0 5px 15px #0007}
+.radar .digits{font-family:Consolas,monospace;color:#4cff84;font-size:30px;font-weight:bold}.radar small{color:#b7e5c9}
+.stageHint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:#061b2cce;padding:8px 13px;border-radius:20px;white-space:nowrap;font-size:12px}
+.controls{display:flex;gap:8px;padding:11px;background:#14364f;flex-wrap:wrap;align-items:center}
+.action{border:0;color:white;font-weight:700;border-radius:10px;padding:11px 14px}.start{background:linear-gradient(#16bb75,#07864f)}.pause{background:linear-gradient(#ffb148,#df7c12)}.reset{background:linear-gradient(#379fff,#075bb6)}.secondary{background:#234e70;border:1px solid #5b9abc}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{padding:11px;background:#0b2b44;border:1px solid #3a6480;border-radius:10px}.stat b{display:block;font-size:22px;margin-top:7px;color:#76d7ff}.stat.orange b{color:#ffb66d}
+.notice{background:#143e4b;border-left:4px solid #f6d474;padding:10px;margin-top:10px;font-size:13px;line-height:1.5}
+.below{max-width:1800px;margin:0 auto;padding:0 12px 20px;display:grid;grid-template-columns:1.1fr 1.2fr 1fr;gap:12px}
+canvas#graph{width:100%;height:230px;background:#e8f6fc;border-radius:9px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:7px 5px;border:1px solid #3e6680;text-align:center}th{background:#195675}td{background:#0a2a42}
+.question{margin:10px 0;padding:10px;background:#0d3049;border-radius:10px}.question label{font-weight:400;margin:8px 0}.question input{accent-color:#52c9f6}textarea{width:100%;min-height:74px;border:1px solid #5488a5;background:#0a273e;color:white;border-radius:8px;padding:9px}
+details{background:#0d3049;padding:11px;border-radius:9px;margin-top:9px}summary{cursor:pointer;font-weight:bold}
+.status{min-height:20px;color:#ffdf86;font-weight:bold;margin-top:9px;font-size:13px}
+@media(max-width:1150px){main{grid-template-columns:290px 1fr}main>.panel:last-child{grid-column:1/-1}.below{grid-template-columns:1fr 1fr}.below>.panel:last-child{grid-column:1/-1}}
+@media(max-width:750px){main,.below{display:block}.panel{margin-bottom:12px}.stage{min-height:420px}.brand{font-size:14px}.stageHint{font-size:10px}.hud{max-width:170px;font-size:11px}.radar{min-width:105px}.radar .digits{font-size:22px}}
+</style></head>
+<body>
+<header><div class="brand">📖 Dạy học khám phá<br>– Thầy Nguyễn Đức Cường<small>PHÒNG THÍ NGHIỆM VẬT LÍ 3D</small></div><h1>BÀI 9: ĐO TỐC ĐỘ<small>THIẾT BỊ BẮN TỐC ĐỘ · KHOA HỌC TỰ NHIÊN 7</small></h1><div class="row"><button class="topbtn" id="full">⛶ Toàn màn hình</button><button class="topbtn" id="help">❔ Hướng dẫn</button></div></header>
+<main>
+<section class="panel"><h2>⚙️ THIẾT LẬP THÍ NGHIỆM</h2><div class="pad">
+<label>1. Phương tiện cần đo</label><div class="row"><button class="chip active" data-car="car">🚗 Ô tô</button><button class="chip" data-car="bike">🏍️ Xe máy</button><button class="chip" data-car="truck">🚚 Xe tải</button></div>
+<label>2. Tốc độ thực của xe <span class="value" id="speedVal">65 km/h</span></label><input id="speed" type="range" min="10" max="120" step="5" value="65"><div class="muted">Điều chỉnh tốc độ rồi thực hiện phép đo mới.</div>
+<label>3. Khoảng cách hai cổng đo <span class="value" id="distVal">50 m</span></label><input id="dist" type="range" min="20" max="200" step="10" value="50">
+<label>4. Chế độ đo</label><div class="row"><button class="chip active" data-mode="radar">📡 Súng radar</button><button class="chip" data-mode="gate">⏱️ Hai cổng đo</button></div>
+<label>5. Môi trường</label><div class="row"><button class="chip active" data-env="sun">☀️ Nắng</button><button class="chip" data-env="rain">🌧️ Mưa</button><button class="chip" data-env="night">🌙 Đêm</button></div>
+<label>6. Tốc độ chạy mô phỏng <span class="value" id="scaleVal">×4</span></label><input id="scale" type="range" min="1" max="12" value="4">
+<div class="notice">🔎 <b>Kiến thức cần nhớ:</b> Súng bắn tốc độ dùng sóng radar để xác định tốc độ theo hiệu ứng Doppler. Hai cổng đo xác định <b>tốc độ trung bình</b> từ quãng đường và thời gian.</div>
+</div></section>
+<section class="panel"><h2>🌄 KHÔNG GIAN THÍ NGHIỆM 3D</h2><div class="stage" id="stage"><div id="scene"></div><div class="hud">🚦 <b id="sceneMode">CHẾ ĐỘ RADAR</b><div id="liveInfo">Sẵn sàng. Nhấn BẮT ĐẦU để xe di chuyển.</div><div style="margin-top:5px">Cổng A: <strong id="gateA">Chưa qua</strong><br>Cổng B: <strong id="gateB">Chưa qua</strong></div></div><div class="radar">📡 MÁY ĐO<div class="digits" id="radarDisplay">--.-</div><small>km/h</small><div class="muted" id="radarState">CHỜ ĐO</div></div><div class="stageHint">🖱️ Kéo để xoay · Lăn chuột để phóng to · Chuột phải để dịch chuyển</div></div><div class="controls"><button class="action start" id="start">▶ BẮT ĐẦU</button><button class="action pause" id="pause">⏸ TẠM DỪNG</button><button class="action reset" id="reset">↻ LÀM LẠI</button><button class="action secondary" id="measure">📸 GHI PHÉP ĐO</button></div><div class="pad"><div class="stats"><div class="stat">⏱️ Thời gian qua hai cổng<b id="elapsed">— s</b></div><div class="stat orange">📏 Quãng đường giữa cổng<b id="distanceStat">50 m</b></div><div class="stat">📡 Tốc độ radar<b id="radarStat">— km/h</b></div><div class="stat orange">🧮 Tốc độ từ hai cổng<b id="gateStat">— m/s</b></div></div><div class="status" id="message">Chọn thông số, dự đoán và bắt đầu thí nghiệm.</div></div></section>
+<section class="panel"><h2>📋 HƯỚNG DẪN & DỰ ĐOÁN</h2><div class="pad">
+<b>Học sinh thực hiện:</b><p class="muted">① Chọn xe và tốc độ → ② Chọn khoảng cách hai cổng → ③ Dự đoán thời gian → ④ Chạy mô phỏng → ⑤ Ghi kết quả → ⑥ So sánh, kết luận.</p>
+<label>Dự đoán thời gian xe đi giữa hai cổng (giây)</label><input type="number" min="0" step=".1" id="prediction" placeholder="Ví dụ: 3,0"><button class="action secondary" style="margin-top:8px;width:100%" id="predict">🔮 LƯU DỰ ĐOÁN</button><div class="status" id="predictionMsg"></div>
+<h3>🔬 Kết quả phép đo</h3><div class="notice" id="resultText">Chưa có kết quả. Khi xe đi qua cổng A và B, hệ thống sẽ đo thời gian và tính tốc độ.</div>
+<details><summary>📘 Công thức và nguyên lí</summary><p><b>Tốc độ trung bình:</b> v = s / t</p><p>v (m/s), s (m), t (s).</p><p><b>Đổi đơn vị:</b> 1 m/s = 3,6 km/h.</p><p><b>Radar:</b> đo độ dịch tần của sóng phản xạ; mô hình này minh họa kết quả lý tưởng, không mô phỏng sóng điện từ thực tế.</p></details>
+<details><summary>🧑‍🏫 Gợi ý hoạt động khám phá</summary><p>Giữ nguyên quãng đường, tăng tốc độ: thời gian qua hai cổng thay đổi thế nào?</p><p>Giữ nguyên tốc độ, tăng khoảng cách hai cổng: thời gian thay đổi thế nào?</p><p>Vì sao số đo radar và số đo từ hai cổng gần nhau khi xe chuyển động đều?</p></details>
+</div></section>
+</main>
+<div class="below">
+<section class="panel"><h2>📈 ĐỒ THỊ QUÃNG ĐƯỜNG – THỜI GIAN</h2><div class="pad"><canvas id="graph" width="660" height="330"></canvas><div class="muted">Đồ thị hiển thị quãng đường xe đi kể từ cổng A; độ dốc của đường thẳng biểu thị tốc độ khi xe chuyển động đều.</div><h3>🔄 ĐỔI ĐƠN VỊ TỐC ĐỘ</h3><div class="row"><input type="number" id="convert" value="65" step=".1" style="flex:1;min-width:80px"><select id="convertUnit" style="flex:1"><option value="kmh">km/h → m/s</option><option value="ms">m/s → km/h</option></select></div><div class="notice" id="convertOut">65 km/h = 18,06 m/s</div></div></section>
+<section class="panel"><h2>🗂️ BẢNG KẾT QUẢ THÍ NGHIỆM</h2><div class="pad"><div style="overflow-x:auto"><table><thead><tr><th>Lần</th><th>Xe</th><th>s (m)</th><th>t (s)</th><th>v (m/s)</th><th>v (km/h)</th><th>Radar (km/h)</th></tr></thead><tbody id="records"><tr><td colspan="7">Chưa ghi kết quả</td></tr></tbody></table></div><div class="row" style="margin-top:12px"><button class="action secondary" id="addRecord">＋ Ghi kết quả</button><button class="action reset" id="csv">⬇ CSV</button><button class="action secondary" id="clear">🗑 Xóa bảng</button></div><div class="status" id="tableMsg"></div></div></section>
+<section class="panel"><h2>🧠 KIỂM TRA KIẾN THỨC</h2><div class="pad">
+<div class="question"><b>Câu 1.</b> Thiết bị radar đo tốc độ dựa trên hiện tượng nào?<label><input type="radio" name="q1" value="a"> Sự khúc xạ ánh sáng</label><label><input type="radio" name="q1" value="b"> Hiệu ứng Doppler</label><label><input type="radio" name="q1" value="c"> Sự bay hơi</label></div>
+<div class="question"><b>Câu 2.</b> Xe đi 100 m trong 5 s. Tốc độ là bao nhiêu?<label><input type="radio" name="q2" value="a"> 20 m/s</label><label><input type="radio" name="q2" value="b"> 5 m/s</label><label><input type="radio" name="q2" value="c"> 500 m/s</label></div>
+<div class="question"><b>Câu 3.</b> Giữ nguyên tốc độ, tăng gấp đôi quãng đường giữa hai cổng. Thời gian sẽ:<label><input type="radio" name="q3" value="a"> Giảm một nửa</label><label><input type="radio" name="q3" value="b"> Không đổi</label><label><input type="radio" name="q3" value="c"> Tăng gấp đôi</label></div>
+<button class="action start" id="check" style="width:100%">✔ KIỂM TRA ĐÁP ÁN</button><div class="status" id="quizResult"></div>
+<label>✍️ Kết luận của em</label><textarea placeholder="Viết nhận xét về mối quan hệ giữa tốc độ, quãng đường và thời gian..."></textarea>
+</div></section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), state={car:'car',mode:'radar',env:'sun',speed:65,dist:50,scale:4,running:false,paused:false,finished:false,x:-65,gateA:null,gateB:null,radar:null,records:[],prediction:null,elapsedSim:0};
+const carNames={car:'Ô tô',bike:'Xe máy',truck:'Xe tải'}, gateX1=-20, sceneBox=$('scene');
+let renderer,scene,camera,controls,vehicle,radarScreen,headLights=[],rainParticles,roadMaterial,skyColor;
+function mat(color,roughness=.65,metalness=.08){return new THREE.MeshStandardMaterial({color,roughness,metalness})}
+function box(w,h,d,color,x,y,z,parent=scene){let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),typeof color==='number'?mat(color):color);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
+function cyl(rt,rb,h,color,x,y,z,parent=scene){let o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,12),mat(color));o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o}
+function sphere(r,color,x,y,z,parent=scene){let o=new THREE.Mesh(new THREE.SphereGeometry(r,12,9),mat(color));o.position.set(x,y,z);parent.add(o);return o}
+function line(points,color){const g=new THREE.BufferGeometry().setFromPoints(points.map(p=>new THREE.Vector3(...p)));let l=new THREE.Line(g,new THREE.LineBasicMaterial({color}));scene.add(l);return l}
+function init3D(){
+ if(!window.THREE){$('message').textContent='Không tải được thư viện 3D. Vui lòng kết nối Internet rồi tải lại trang.';return}
+ scene=new THREE.Scene();scene.background=new THREE.Color(0x9bd9f6);scene.fog=new THREE.Fog(0x9bd9f6,65,230);
+ camera=new THREE.PerspectiveCamera(48,1,.1,500);camera.position.set(42,31,65);camera.lookAt(0,1,0);
+ renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;sceneBox.appendChild(renderer.domElement);
+ if(THREE.OrbitControls){controls=new THREE.OrbitControls(camera,renderer.domElement);controls.target.set(0,1,0);controls.enableDamping=true;controls.maxPolarAngle=Math.PI/2.07;controls.minDistance=18;controls.maxDistance=145}
+ scene.add(new THREE.HemisphereLight(0xf0fbff,0x4a654a,1.7));let sun=new THREE.DirectionalLight(0xffffff,2);sun.position.set(-35,65,25);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-100;sun.shadow.camera.right=100;sun.shadow.camera.top=70;sun.shadow.camera.bottom=-70;scene.add(sun);
+ box(260,.15,125,0x67a66b,0,-.22,0);roadMaterial=mat(0x303b46);box(260,.12,18,roadMaterial,0,-.05,0);
+ for(let x=-125;x<=125;x+=9){box(4,.03,.2,0xe8e6cb,x,.05,0);box(4,.03,.18,0xe9e6ca,x,.05,-7.7);box(4,.03,.18,0xe9e6ca,x,.05,7.7)}
+ for(let side of [-1,1]){box(250,.3,.25,0xb7c7c8,0,1,side*10);for(let x=-120;x<125;x+=9){box(.22,1.7,.25,0x9fb1b9,x,.8,side*10)}}
+ for(let x=-125;x<125;x+=12){for(let z of [-19,21]){cyl(.3,.4,3,0x705337,x,1.5,z);sphere(3.6,0x38864c,x,4.5,z);sphere(2.6,0x439e5c,x+1,6,z-1)}}
+ for(let x=-120;x<125;x+=22){let b=box(7,5+(x%4+4)%4,7,0xabbcc2,x,2,-43);box(7,.2,7,0x596f7a,x,b.position.y+b.geometry.parameters.height/2,-43)}
+ for(let i=0;i<2;i++)makeGate(i===0?gateX1:gateX1+state.dist*.35,i);
+ makeRadar();makeVehicle();setEnv();resize();new ResizeObserver(resize).observe(sceneBox);requestAnimationFrame(loop)
+}
+let gateObjects=[];
+function makeGate(x,i){let group=new THREE.Group();scene.add(group);group.position.x=x;for(let z of [-9,9]){box(.5,7,.5,0x5b6972,0,3.5,z,group);box(.95,1.3,.95,0x1b303d,0,5.6,z,group);box(.3,.3,.3,0x42ffb1,0,5.7,z+Math.sign(z)*.53,group)}
+ let beam=new THREE.Mesh(new THREE.BoxGeometry(.11,.1,18),new THREE.MeshBasicMaterial({color:i===0?0x44e7ff:0xffdf72,transparent:true,opacity:.7}));beam.position.y=2.6;group.add(beam);
+ let pole=box(.5,7,.5,0x536c78,0,3.5,-10,group);gateObjects.push(group)}
+function makeRadar(){let g=new THREE.Group();scene.add(g);g.position.set(-31,0,17);
+ for(let dx of [-1,1])for(let dz of [-1,1]){let leg=cyl(.12,.12,5.5,0x182f40,dx*.75,2.7,dz*.75,g);leg.rotation.z=dx*.12}
+ box(2.8,1.8,2.3,0x2a3740,0,6,0,g);box(2.4,1.3,.12,0x070e13,0,6,1.2,g);cyl(.95,.95,2.2,0x53646d,0,6,-2,g).rotation.x=Math.PI/2;
+ let beam=new THREE.Mesh(new THREE.ConeGeometry(5,21,24,1,true),new THREE.MeshBasicMaterial({color:0xff5544,transparent:true,opacity:.10,depthWrite:false,side:THREE.DoubleSide}));beam.rotation.z=-Math.PI/2;beam.position.set(11,5,-2);g.add(beam)}
+function wheel(x,y,z,parent){let t=new THREE.Mesh(new THREE.CylinderGeometry(.9,.9,.45,18),mat(0x101820));t.rotation.x=Math.PI/2;t.position.set(x,y,z);parent.add(t);let hub=new THREE.Mesh(new THREE.CylinderGeometry(.45,.45,.48,16),mat(0xc6d9e0));hub.rotation.x=Math.PI/2;hub.position.set(x,y,z);parent.add(hub)}
+function makeVehicle(){if(vehicle)scene.remove(vehicle);vehicle=new THREE.Group();scene.add(vehicle);
+ let c=state.car,mainColor=c==='car'?0xf23f3f:c==='bike'?0x268dff:0xf5aa38;
+ if(c==='bike'){box(3.7,.65,1.1,mainColor,0,1.4,0,vehicle);box(1.3,1.1,.9,0x1b2b39,-.5,2.1,0,vehicle);for(let x of [-1.35,1.35])wheel(x,.9,0,vehicle);box(.2,1.1,1.6,0x222b31,1.2,2,0,vehicle)}
+ else {let L=c==='truck'?9:5.5;box(L,1.3,2.8,mainColor,0,1.45,0,vehicle);box(c==='truck'?3.2:3.1,1.25,2.55,c==='truck'?0xe6b44a:0xb7d9eb,c==='truck'?L/2-1.8:-.2,2.55,0,vehicle);
+ if(c==='truck')box(5.5,2.4,2.8,0xd5e3e9,-1.5,2.7,0,vehicle);
+ for(let x of [-L*.31,L*.31])for(let z of [-1.45,1.45])wheel(x,.86,z,vehicle);
+ for(let z of [-.9,.9]){box(.08,.35,.48,0xfff1c0,L/2+.02,1.7,z,vehicle);box(.08,.35,.48,0xb41616,-L/2-.02,1.7,z,vehicle)}}
+ vehicle.position.set(state.x,0,0)
+}
+function resize(){if(!renderer)return;let w=sceneBox.clientWidth,h=sceneBox.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
+function setEnv(){if(!scene)return;let colors={sun:0x9bd9f6,rain:0x7c9eaf,night:0x101e39};scene.background=new THREE.Color(colors[state.env]);scene.fog.color.set(colors[state.env]);}
+function reset(){state.running=false;state.paused=false;state.finished=false;state.x=-65;state.gateA=null;state.gateB=null;state.radar=null;state.elapsedSim=0;if(vehicle)vehicle.position.x=state.x;updateDisplay();$('message').textContent='Đã đặt lại. Nhấn BẮT ĐẦU để đo tốc độ.';drawGraph()}
+function run(){if(state.finished)reset();state.running=true;state.paused=false;$('message').textContent='Xe đang chuyển động. Quan sát máy radar và hai cổng đo.'}
+function updateDisplay(){let v=state.speed/3.6,t=state.dist/v;$('gateA').textContent=state.gateA===null?'Chưa qua':state.gateA.toFixed(2)+' s';$('gateB').textContent=state.gateB===null?'Chưa qua':state.gateB.toFixed(2)+' s';$('elapsed').textContent=state.gateA!==null&&state.gateB!==null?(state.gateB-state.gateA).toFixed(2)+' s':'— s';$('distanceStat').textContent=state.dist+' m';$('radarDisplay').textContent=state.radar===null?'--.-':state.radar.toFixed(1);$('radarStat').textContent=state.radar===null?'— km/h':state.radar.toFixed(1)+' km/h';$('radarState').textContent=state.radar===null?'CHỜ ĐO':'ĐÃ ĐO';$('gateStat').textContent=state.gateB===null?'— m/s':(state.dist/(state.gateB-state.gateA)).toFixed(2)+' m/s'}
+function finish(){state.running=false;state.finished=true;updateDisplay();let t=state.gateB-state.gateA;let measured=state.dist/t;$('resultText').innerHTML=`<b>Phương tiện:</b> ${carNames[state.car]}<br><b>Quãng đường:</b> ${state.dist} m<br><b>Thời gian:</b> ${t.toFixed(2)} s<br><b>Tốc độ trung bình:</b> ${measured.toFixed(2)} m/s = ${(measured*3.6).toFixed(1)} km/h<br><b>Radar lý tưởng:</b> ${state.radar.toFixed(1)} km/h.`;$('message').textContent='Đo hoàn tất! Nhấn GHI PHÉP ĐO để lưu vào bảng.';drawGraph();if(state.prediction!==null){$('predictionMsg').textContent=`Em dự đoán ${state.prediction.toFixed(2)} s; thực tế ${t.toFixed(2)} s; chênh lệch ${Math.abs(t-state.prediction).toFixed(2)} s.`}}
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);let dt=Math.min((now-last)/1000,.08);last=now;if(state.running&&!state.paused){let before=state.x;let delta=state.speed/3.6*state.scale*dt*.35;state.x+=delta;state.elapsedSim+=dt*state.scale;let xA=gateX1,xB=gateX1+state.dist*.35;
+ if(state.radar===null&&state.x>=-37){state.radar=state.speed}
+ if(state.gateA===null&&before<xA&&state.x>=xA){state.gateA=state.elapsedSim-(state.x-xA)/(state.speed/3.6*.35)}
+ if(state.gateB===null&&before<xB&&state.x>=xB){state.gateB=state.elapsedSim-(state.x-xB)/(state.speed/3.6*.35);finish()}
+ if(vehicle)vehicle.position.x=state.x;updateDisplay();drawGraph()}
+ if(controls)controls.update();if(renderer)renderer.render(scene,camera)}
+function updateGates(){if(gateObjects[1])gateObjects[1].position.x=gateX1+state.dist*.35;reset()}
+function drawGraph(){let c=$('graph'),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#e8f6fc';ctx.fillRect(0,0,w,h);let L=60,R=20,T=20,B=43;let pw=w-L-R,ph=h-T-B;let total=state.dist/(state.speed/3.6);let maxT=Math.ceil(total*1.15),maxS=state.dist*1.15;
+ ctx.strokeStyle='#bad7e5';ctx.lineWidth=1;ctx.font='13px Arial';ctx.fillStyle='#274459';for(let i=0;i<=5;i++){let x=L+pw*i/5,y=T+ph*(1-i/5);ctx.beginPath();ctx.moveTo(x,T);ctx.lineTo(x,T+ph);ctx.moveTo(L,y);ctx.lineTo(L+pw,y);ctx.stroke();ctx.fillText((maxT*i/5).toFixed(1),x-8,T+ph+20);ctx.fillText((maxS*i/5).toFixed(0),8,y+5)}
+ ctx.strokeStyle='#183f59';ctx.lineWidth=2;ctx.strokeRect(L,T,pw,ph);
+ let progress=state.gateA===null?0:state.gateB!==null?1:Math.max(0,Math.min(1,(state.x-gateX1)/(state.dist*.35)));
+ ctx.strokeStyle='#e7483b';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(L,T+ph);ctx.lineTo(L+pw*(total/maxT)*progress,T+ph-ph*(state.dist/maxS)*progress);ctx.stroke();
+ ctx.fillStyle='#193b51';ctx.fillText('Thời gian (s)',w/2-37,h-8);ctx.save();ctx.translate(15,h/2+38);ctx.rotate(-Math.PI/2);ctx.fillText('Quãng đường (m)',0,0);ctx.restore();
+ ctx.fillStyle='#c23930';ctx.fillText('● Xe chuyển động đều',w-195,16)}
+function saveRecord(){if(state.gateA===null||state.gateB===null){$('tableMsg').textContent='Hãy hoàn thành phép đo trước khi ghi kết quả.';return}let t=state.gateB-state.gateA,v=state.dist/t;state.records.push({car:carNames[state.car],s:state.dist,t,v,kmh:v*3.6,radar:state.radar});renderRecords();$('tableMsg').textContent='Đã lưu phép đo số '+state.records.length}
+function renderRecords(){let tbody=$('records');tbody.innerHTML=state.records.length?state.records.map((r,i)=>`<tr><td>${i+1}</td><td>${r.car}</td><td>${r.s}</td><td>${r.t.toFixed(2)}</td><td>${r.v.toFixed(2)}</td><td>${r.kmh.toFixed(1)}</td><td>${r.radar.toFixed(1)}</td></tr>`).join(''):'<tr><td colspan="7">Chưa ghi kết quả</td></tr>'}
+function updateConversion(){let n=Number($('convert').value),u=$('convertUnit').value;$('convertOut').textContent=u==='kmh'?`${n} km/h = ${(n/3.6).toFixed(2)} m/s`:`${n} m/s = ${(n*3.6).toFixed(2)} km/h`}
+document.querySelectorAll('[data-car]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-car]').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.car=b.dataset.car;makeVehicle();reset()});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-mode]').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.mode=b.dataset.mode;$('sceneMode').textContent=state.mode==='radar'?'CHẾ ĐỘ RADAR':'CHẾ ĐỘ HAI CỔNG ĐO';reset()});
+document.querySelectorAll('[data-env]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-env]').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.env=b.dataset.env;setEnv()});
+$('speed').oninput=e=>{state.speed=+e.target.value;$('speedVal').textContent=state.speed+' km/h';reset()};
+$('dist').oninput=e=>{state.dist=+e.target.value;$('distVal').textContent=state.dist+' m';updateGates()};
+$('scale').oninput=e=>{state.scale=+e.target.value;$('scaleVal').textContent='×'+state.scale};
+$('start').onclick=run;$('pause').onclick=()=>{if(!state.running)return;state.paused=!state.paused;$('pause').textContent=state.paused?'▶ TIẾP TỤC':'⏸ TẠM DỪNG'};$('reset').onclick=reset;$('measure').onclick=saveRecord;$('addRecord').onclick=saveRecord;
+$('predict').onclick=()=>{let v=Number($('prediction').value);if(!$('prediction').value||v<=0){$('predictionMsg').textContent='Nhập thời gian dự đoán lớn hơn 0.';return}state.prediction=v;$('predictionMsg').textContent='Đã lưu dự đoán '+v.toFixed(2)+' s. Hãy bắt đầu phép đo.'};
+$('convert').oninput=updateConversion;$('convertUnit').onchange=updateConversion;
+$('clear').onclick=()=>{state.records=[];renderRecords();$('tableMsg').textContent='Đã xóa bảng kết quả.'};
+$('csv').onclick=()=>{if(!state.records.length){$('tableMsg').textContent='Chưa có kết quả để xuất.';return}let rows=[['Lan','Phuong tien','Quang duong (m)','Thoi gian (s)','Toc do (m/s)','Toc do (km/h)','Radar (km/h)'],...state.records.map((r,i)=>[i+1,r.car,r.s,r.t.toFixed(2),r.v.toFixed(2),r.kmh.toFixed(1),r.radar.toFixed(1)])];let blob=new Blob(['\ufeff'+rows.map(r=>r.join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});let url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='ket_qua_bai_9_do_toc_do.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$('check').onclick=()=>{let answers={q1:'b',q2:'a',q3:'c'},score=0;for(let [q,a] of Object.entries(answers)){let selected=document.querySelector(`input[name="${q}"]:checked`);if(selected&&selected.value===a)score++}$('quizResult').textContent=`Em đạt ${score}/3 câu đúng. ${score===3?'Xuất sắc!':'Hãy xem lại kiến thức và thử lần nữa.'}`};
+$('full').onclick=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()};
+$('help').onclick=()=>alert('HƯỚNG DẪN: 1) Chọn xe, tốc độ, khoảng cách và chế độ đo. 2) Nhập dự đoán. 3) Bắt đầu và quan sát 3D. 4) Ghi kết quả vào bảng. 5) So sánh đồ thị và làm bài kiểm tra. Dùng chuột kéo để xoay góc nhìn.');
+$('distanceStat').textContent=state.dist+' m';drawGraph();updateConversion();init3D();
+})();
+</script></body></html>
